@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Himanshu Calculator</title>
+
+<style>
+body{
+    margin:0;
+    background:#000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    font-family:Arial;
+}
+
+.calculator{
+    width:340px;
+    background:#000;
+    padding:15px;
+    border-radius:18px;
+}
+
+/* Profile */
+.profile{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+.profile img{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    border:2px solid #e91e63;
+    object-fit:cover;
+}
+.profile a{
+    color:#e91e63;
+    text-decoration:none;
+    font-size:14px;
+}
+.profile input[type="file"]{
+    display:none;
+}
+
+/* Display */
+.display-box{
+    padding:20px 10px;
+    text-align:right;
+}
+
+.preview{
+    color:#999;
+    font-size:22px;
+    min-height:28px;
+}
+
+.display{
+    color:#fff;
+    font-size:44px;
+    min-height:60px;
+    word-wrap:break-word;
+}
+
+/* Buttons */
+.buttons{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+button{
+    height:60px;
+    font-size:20px;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+}
+
+.num{background:#222;color:#fff;}
+.fun{background:#555;color:#fff;}
+.op{background:#e91e63;color:#fff;}
+
+.equal{
+    background:#e91e63;
+    color:#fff;
+    grid-column:4;
+    grid-row:5;
+    height:130px;
+    border-radius:30px;
+}
+
+.zero{
+    grid-column:1 / span 2;
+    border-radius:30px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+
+    <div class="profile">
+        <label for="logoUpload">
+            <img id="profileImg" src="me.jpg" alt="Logo">
+        </label>
+        <input type="file" id="logoUpload" accept="image/*">
+        <a href="https://youtube.com/@himanshuofficialytgaming" target="_blank">
+            YouTube ▶
+        </a>
+    </div>
+
+    <!-- DISPLAY -->
+    <div class="display-box">
+        <div id="preview" class="preview">0</div>
+        <div id="display" class="display">0</div>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="buttons">
+        <button class="fun" onclick="clearDisplay()">AC</button>
+        <button class="fun" onclick="del()">⌫</button>
+        <button class="fun" onclick="append('%')">%</button>
+        <button class="op" onclick="append('÷')">÷</button>
+
+        <button class="num" onclick="append('7')">7</button>
+        <button class="num" onclick="append('8')">8</button>
+        <button class="num" onclick="append('9')">9</button>
+        <button class="op" onclick="append('×')">×</button>
+
+        <button class="num" onclick="append('4')">4</button>
+        <button class="num" onclick="append('5')">5</button>
+        <button class="num" onclick="append('6')">6</button>
+        <button class="op" onclick="append('-')">−</button>
+
+        <button class="num" onclick="append('1')">1</button>
+        <button class="num" onclick="append('2')">2</button>
+        <button class="num" onclick="append('3')">3</button>
+        <button class="op" onclick="append('+')">+</button>
+
+        <button class="num zero" onclick="append('0')">0</button>
+        <button class="num" onclick="append('.')">.</button>
+        <button class="equal" onclick="calculate()">=</button>
+    </div>
+
+</div>
+
+<script>
+let display = document.getElementById("display");
+let preview = document.getElementById("preview");
+let profileImg = document.getElementById("profileImg");
+let logoUpload = document.getElementById("logoUpload");
+
+function append(value){
+    if(display.innerText === "0"){
+        display.innerText = value;
+    }else{
+        display.innerText += value;
+    }
+    liveResult();
+}
+
+function clearDisplay(){
+    display.innerText = "0";
+    preview.innerText = "0";
+}
+
+function del(){
+    display.innerText = display.innerText.slice(0,-1);
+    if(display.innerText === ""){
+        display.innerText = "0";
+    }
+    liveResult();
+}
+
+function liveResult(){
+    try{
+        let exp = display.innerText;
+        exp = exp.replace(/(\d+(\.\d+)?)%(\d+(\.\d+)?)/g,
+            (m,a,_,b)=> (a/100)*b
+        );
+        exp = exp.replace(/×/g,"*").replace(/÷/g,"/");
+        preview.innerText = eval(exp);
+    }catch{
+        preview.innerText = "";
+    }
+}
+
+function calculate(){
+    display.innerText = preview.innerText;
+}
+
+// Image upload logic
+logoUpload.addEventListener("change", function(){
+    const file = this.files[0];
+    if(file){
+        const reader = new FileReader();
+        reader.onload = function(e){
+            profileImg.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+
+</body>
+</html>
